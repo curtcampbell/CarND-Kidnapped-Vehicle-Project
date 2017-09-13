@@ -14,6 +14,8 @@
 #include <vector>
 #include "map.h"
 
+#define TWO_PI M_PI * 2
+
 /*
  * Struct representing one position/control measurement.
  */
@@ -41,6 +43,9 @@ struct LandmarkObs {
 	int id;				// Id of matching landmark in the map.
 	double x;			// Local (vehicle coordinates) x position of landmark observation [m]
 	double y;			// Local (vehicle coordinates) y position of landmark observation [m]
+
+  LandmarkObs() = default;
+  LandmarkObs(int id, double x, double y) : id(id), x(x), y(y) {}
 };
 
 /*
@@ -51,6 +56,18 @@ struct LandmarkObs {
  */
 inline double dist(double x1, double y1, double x2, double y2) {
 	return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+}
+
+inline double MulVarDensity(double x, double y, double mux, double muy, double stdDevX, double stdDevY) {
+
+  return 1 / (TWO_PI * stdDevX * stdDevY) * exp(-0.5 * (pow(x - mux, 2)/ pow(stdDevX, 2) + pow(y - muy, 2)/ pow(stdDevY, 2)));
+}
+
+inline void ToMapCoordinates(double xTranslation, double yTranslation, double rotation, double& x, double& y) {
+  double x0 = x;
+  double y0 = y;
+  x = x0 * cos(rotation) - y0 * sin(rotation) + xTranslation;
+  y = x0 * sin(rotation) + y0 * cos(rotation) + yTranslation;
 }
 
 inline double * getError(double gt_x, double gt_y, double gt_theta, double pf_x, double pf_y, double pf_theta) {

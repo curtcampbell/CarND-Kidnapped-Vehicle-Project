@@ -12,7 +12,6 @@
 #include "helper_functions.h"
 
 struct Particle {
-
 	int id;
 	double x;
 	double y;
@@ -45,7 +44,7 @@ public:
 
 	// Constructor
 	// @param num_particles Number of particles
-	ParticleFilter() : num_particles(0), is_initialized(false) {}
+	ParticleFilter() : num_particles(100), is_initialized(false) {}
 
 	// Destructor
 	~ParticleFilter() {}
