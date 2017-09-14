@@ -38,7 +38,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 
   for (int i = 0; i < num_particles; ++i) {
     Particle p;
-    p.id = particles.size();
+    p.id = i;
     p.x = dist_x(gen);
     p.y = dist_y(gen);
     p.theta = dist_theta(gen);
@@ -63,9 +63,9 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
   
   for (auto& particle : particles) {
 
-    auto x = fabs(yaw_rate) <= 0.00001 ? particle.x + velocity / yaw_rate * (sin(particle.theta + yaw_rate*delta_t) - sin(particle.theta)) :
+    auto x = fabs(yaw_rate) >= 0.00001 ? particle.x + velocity / yaw_rate * (sin(particle.theta + yaw_rate*delta_t) - sin(particle.theta)) :
                                          particle.x + velocity * cos(particle.theta) * delta_t;
-    auto y = fabs(yaw_rate) <= 0.00001 ? particle.y + velocity / yaw_rate * (cos(particle.theta) - cos(particle.theta + yaw_rate*delta_t)) :
+    auto y = fabs(yaw_rate) >= 0.00001 ? particle.y + velocity / yaw_rate * (cos(particle.theta) - cos(particle.theta + yaw_rate*delta_t)) :
                                          particle.y + velocity * sin(particle.theta) * delta_t;
     auto theta = particle.theta + yaw_rate*delta_t;
 
